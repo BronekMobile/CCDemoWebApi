@@ -27,6 +27,13 @@ namespace CCDemoAPI
                     _dbContext.Database.Migrate();
                 }
 
+                if (!_dbContext.Roles.Any())
+                {
+                    var roles = GetRoles();
+                    _dbContext.AddRange(roles);
+                    _dbContext.SaveChanges();
+                }
+
                 if (!_dbContext.Locations.Any())
                 {
                     var locations = GetLocations();
@@ -35,6 +42,22 @@ namespace CCDemoAPI
                 }
             }
          }
+
+        private IEnumerable<Role> GetRoles()
+        {
+            var roles = new List<Role>()
+            {
+                new Role()
+                {
+                    Name = "User"
+                },
+                new Role()
+                {
+                    Name = "Admin"
+                },
+            };
+            return roles;
+        }
 
         private IEnumerable<Location> GetLocations()
         {

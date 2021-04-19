@@ -29,6 +29,14 @@ namespace CCDemoAPI.Services
             _logger = logger;
         }
 
+        public List<LocationDto> GetAll()
+        {
+            var locations = _dbContext.Locations.Include(r => r.Address).Include(r => r.Parking).Include(r => r.Rooms);
+
+            var locationsDto = _mapper.Map<List<LocationDto>>(locations);
+            return locationsDto;
+        }
+
         /// <summary>
         /// Get Location by id of location
         /// </summary>

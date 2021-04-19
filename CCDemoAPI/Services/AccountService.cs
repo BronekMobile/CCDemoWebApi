@@ -2,6 +2,7 @@
 using CCDemoAPI.Exceptions;
 using CCDemoAPI.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -36,7 +37,8 @@ namespace CCDemoAPI.Services
             {
                 FirstName = dto.FirstName,
                 Email = dto.Email,
-                LastName = dto.LastName
+                LastName = dto.LastName,
+                RoleId = dto.RoleId
             };
 
             var hashedPassword = _passwordHasher.HashPassword(newUser, dto.Password);
@@ -48,7 +50,7 @@ namespace CCDemoAPI.Services
 
         public string GenerateJwt(LoginDto dto)
         {
-            var user = _dbContext.Users.FirstOrDefault(u => u.Email == dto.Email);
+            var user = _dbContext.Users.Include(u => u.Role).FirstOrDefault(u => u.Email == dto.Email);
 
             if (user is null)
                 throw new BadRequestException("Wrong username or password");
@@ -61,7 +63,8 @@ namespace CCDemoAPI.Services
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}")
+                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
+                new Claim(ClaimTypes.Role, user.Role.Name)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));

@@ -12,5 +12,7 @@ namespace CCDemoAPI.Entities
         public String FirstName { get; set; }
         public String LastName { get; set; }
         public String PasswordHash { get; set; }
+        public int RoleId { get; set; }
+        public virtual Role Role { get; set; }
     }
 }

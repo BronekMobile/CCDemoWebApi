@@ -21,6 +21,14 @@ namespace CCDemoAPI.Controllers
             _locationService = locationService;
         }
 
+        [HttpGet]
+        [Authorize(Roles = "User")]
+        public ActionResult<List<LocationDto>> GetAll()
+        {
+            var locations = _locationService.GetAll();
+            return Ok(locations);
+        }
+
         /// <summary>
         /// Get location by identity.
         /// </summary>

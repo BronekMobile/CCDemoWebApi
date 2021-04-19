@@ -16,12 +16,23 @@ namespace CCDemoAPI.Entities
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Parking> ParkingLots { get; set; }
+
+        public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
+    
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Role>()
+             .Property(u => u.Name)
+             .IsRequired();
+
             modelBuilder.Entity<User>()
                 .Property(u => u.Email)
+                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.RoleId)
                 .IsRequired();
 
             modelBuilder.Entity<User>()
